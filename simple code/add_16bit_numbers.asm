@@ -1,20 +1,26 @@
-LXI H, 3000H     ; Load address of first number
-MOV D, M         ; Load lower byte of first number into D
+LXI H, 3000H     ; HL = address of first number
+MOV E, M         ; E = low byte of first number
 INX H
-MOV E, M         ; Load higher byte of first number into E
+MOV D, M         ; D = high byte of first number
 
-INX H            ; Now H points to 3002H (second number)
-MOV L, M         ; Load lower byte of second number into L
+INX H            ; HL = address of second number
+MOV C, M         ; C = low byte of second number
 INX H
-MOV H, M         ; Load higher byte of second number into H
+MOV B, M         ; B = high byte of second number
 
-; Now DE = first number, HL = second number
+; Add low bytes
+MOV A, E
+ADD C
+MOV L, A         ; L = sum low byte
 
-DAD D            ; HL = HL + DE (result in HL)
+; Add high bytes with carry
+MOV A, D
+ADC B
+MOV H, A         ; H = sum high byte
 
-LXI D, 0000H     ; Load destination address for result
-MOV M, L         ; Store lower byte of result at 0000H
+LXI D, 0000H     ; DE = result address
+MOV M, L         ; Store low byte
 INX D
-MOV M, H         ; Store higher byte of result at 0001H
+MOV M, H         ; Store high byte
 
-HLT              ; End of program
+HLT
